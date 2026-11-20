@@ -1,0 +1,129 @@
+---
+import ZineLayout from "../../layouts/ZineLayout.astro";
+import { ZINE_ARTICLES } from "../../data/articles";
+import { ReadingProgress } from "../../components/islands/ReadingProgress";
+import { ReaderToolbar } from "../../components/islands/ReaderToolbar";
+import { QuoteClipper } from "../../components/islands/QuoteClipper";
+import { MeteredPaywall } from "../../components/islands/MeteredPaywall";
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+const article = ZINE_ARTICLES.find((a) => a.slug === slug);
+
+if (!article) {
+  return Astro.redirect("/");
+}
+
+const initialMember = Astro.cookies.get("press09_member")?.value === "1";
+const rawReads = Astro.cookies.get("press09_reads")?.value ?? "";
+const initialReads = rawReads
+  .split(",")
+  .map((s) => decodeURIComponent(s).trim())
+  .filter(Boolean);
+
+const otherArticles = ZINE_ARTICLES.filter((a) => a.slug !== article.slug).slice(0, 2);
+---
+
+<ZineLayout title={`${article.title} — PRESS 09`} description={article.dek}>
+  <ReadingProgress
+    client:load
+    readMinutes={article.readMinutes}
+    articleTitle={article.title}
+  />
+
+  <article class="mx-auto max-w-[1180px] px-5 py-8 sm:py-10">
+    {/* Morphing View Transition Header */}
+    <header class="grid grid-cols-1 gap-7 border-b-2 border-[#111111] pb-8 lg:grid-cols-12">
+      <div class="flex flex-col justify-between lg:col-span-6">
+        <div>
+          <div class="flex items-center justify-between font-mono text-[11px]">
+            <span
+              transition:name={`num-${article.slug}`}
+              class="bg-[#0038FF] px-2.5 py-0.5 font-semibold text-white"
+            >
+              ESSAY {article.index}
+            </span>
+            <span class="text-[#55534D]">
+              {article.topic} · {article.date}
+            </span>
+          </div>
+
+          <h1
+            transition:name={`title-${article.slug}`}
+            class="mt-4 font-display text-3xl sm:text-4xl lg:text-[2.85rem] font-extrabold leading-[1.04] tracking-tight text-[#111111]"
+          >
+            {article.title}
+          </h1>
+
+          <p class="mt-4 font-serif text-lg leading-relaxed text-[#55534D]">
+            {article.dek}
+          </p>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-[#DCD9CE] pt-3 font-mono text-xs text-[#55534D]">
+          <span>
+            WORDS BY <strong class="text-[#111111]">{article.author.toUpperCase()}</strong> · {article.city}
+          </span>
+          <span>{article.readMinutes} MIN READ</span>
+        </div>
+      </div>
+
+      <div class="overflow-hidden border-2 border-[#111111] bg-[#ECEAE2] lg:col-span-6">
+        <img
+          src={article.coverImage}
+          alt={article.coverAlt}
+          transition:name={`cover-${article.slug}`}
+          class="aspect-[4/3] w-full object-cover"
+        />
+      </div>
+    </header>
+
+    {/* Calm 66ch Centered Editorial Reading Column */}
+    <div class="mx-auto mt-8 max-w-[68ch]">
+      <ReaderToolbar client:load />
+
+      <QuoteClipper
+        client:load
+        articleSlug={article.slug}
+        articleTitle={article.title}
+        featuredPullQuote={article.pullQuote}
+      />
+
+      <MeteredPaywall
+        client:load
+        slug={article.slug}
+        initialMember={initialMember}
+        initialReads={initialReads}
+        sections={article.sections}
+      />
+
+      {/* Continue Reading Links */}
+      <nav
+        aria-label="Next essays in Issue 09"
+        class="mt-14 border-t-2 border-[#111111] pt-6"
+      >
+        <div class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#55534D]">
+          Continue Issue 09
+        </div>
+        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {
+            otherArticles.map((next) => (
+              <a
+                href={`/articles/${next.slug}`}
+                class="group border border-[#111111] bg-[#ECEAE2]/50 p-4 hover:border-[#0038FF] transition-colors"
+              >
+                <span class="font-mono text-[10px] font-semibold text-[#FF3B6B]">
+                  ESSAY {next.index} · {next.topic}
+                </span>
+                <div class="mt-1 font-display text-lg font-bold leading-snug text-[#111111] group-hover:text-[#0038FF]">
+                  {next.title}
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </nav>
+    </div>
+  </article>
+</ZineLayout>

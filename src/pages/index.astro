@@ -1,0 +1,127 @@
+---
+import ZineLayout from "../layouts/ZineLayout.astro";
+import { ZINE_ARTICLES } from "../data/articles";
+
+const lead = ZINE_ARTICLES[0];
+const rest = ZINE_ARTICLES.slice(1);
+---
+
+<ZineLayout title="PRESS 09 — Issue 09 · Tokyo / Zurich Culture Zine">
+  <main class="mx-auto max-w-[1180px] px-5 py-8 sm:py-10">
+    {/* Editorial Issue Lead Spread */}
+    <section class="grid grid-cols-1 gap-7 border-b-2 border-[#111111] pb-10 lg:grid-cols-12">
+      <a
+        href={`/articles/${lead.slug}`}
+        class="group block overflow-hidden border-2 border-[#111111] bg-[#ECEAE2] lg:col-span-7"
+      >
+        <img
+          src={lead.coverImage}
+          alt={lead.coverAlt}
+          transition:name={`cover-${lead.slug}`}
+          class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+        />
+      </a>
+
+      <div class="flex flex-col justify-between lg:col-span-5">
+        <div>
+          <div class="flex items-center justify-between border-b border-[#DCD9CE] pb-2 font-mono text-[11px]">
+            <span
+              transition:name={`num-${lead.slug}`}
+              class="bg-[#0038FF] px-2 py-0.5 font-semibold text-white"
+            >
+              ESSAY {lead.index}
+            </span>
+            <span class="text-[#55534D]">
+              {lead.topic} · {lead.readMinutes} MIN READ
+            </span>
+          </div>
+
+          <a href={`/articles/${lead.slug}`} class="group block mt-4">
+            <h1
+              transition:name={`title-${lead.slug}`}
+              class="font-display text-3xl sm:text-4xl lg:text-[2.65rem] font-extrabold leading-[1.04] tracking-tight text-[#111111] group-hover:text-[#0038FF] transition-colors"
+            >
+              {lead.title}
+            </h1>
+          </a>
+
+          <p class="mt-4 font-serif text-lg leading-relaxed text-[#55534D]">
+            {lead.dek}
+          </p>
+        </div>
+
+        <div class="mt-6 flex items-center justify-between border-t border-[#DCD9CE] pt-4 font-mono text-xs">
+          <span>
+            BY <strong class="text-[#111111]">{lead.author.toUpperCase()}</strong> ({lead.city})
+          </span>
+          <a
+            href={`/articles/${lead.slug}`}
+            class="border-2 border-[#111111] bg-[#E9FF32] px-3.5 py-1.5 font-semibold text-[#111111] hover:bg-[#0038FF] hover:text-white transition-colors"
+          >
+            Read Essay →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    {/* Remaining Issue 09 Essays Grid */}
+    <section class="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2">
+      {
+        rest.map((article) => (
+          <article class="flex flex-col justify-between border-b border-[#DCD9CE] pb-7">
+            <div>
+              <a
+                href={`/articles/${article.slug}`}
+                class="group block overflow-hidden border border-[#111111] bg-[#ECEAE2]"
+              >
+                <img
+                  src={article.coverImage}
+                  alt={article.coverAlt}
+                  transition:name={`cover-${article.slug}`}
+                  class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                />
+              </a>
+
+              <div class="mt-4 flex items-center justify-between font-mono text-[11px]">
+                <span
+                  transition:name={`num-${article.slug}`}
+                  class="bg-[#FF3B6B] px-2 py-0.5 font-semibold text-white"
+                >
+                  ESSAY {article.index}
+                </span>
+                <span class="text-[#55534D]">
+                  {article.topic} · {article.readMinutes} MIN
+                </span>
+              </div>
+
+              <a href={`/articles/${article.slug}`} class="group block mt-2.5">
+                <h2
+                  transition:name={`title-${article.slug}`}
+                  class="font-display text-2xl font-bold leading-snug tracking-tight text-[#111111] group-hover:text-[#0038FF] transition-colors"
+                >
+                  {article.title}
+                </h2>
+              </a>
+
+              <p class="mt-2 font-serif text-[15px] leading-relaxed text-[#55534D]">
+                {article.dek}
+              </p>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between pt-2 font-mono text-[11px] text-[#55534D]">
+              <span>
+                {article.author} · {article.city}
+              </span>
+              <a
+                href={`/articles/${article.slug}`}
+                class="font-semibold text-[#0038FF] underline underline-offset-4 hover:text-[#FF3B6B]"
+              >
+                Open Essay →
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </section>
+  </main>
+</ZineLayout>

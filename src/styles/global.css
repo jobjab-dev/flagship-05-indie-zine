@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #F7F6F2;
+  --paper-deep: #ECEAE2;
+  --ink: #111111;
+  --ink-muted: #55534D;
+  --cobalt: #0038FF;
+  --coral: #FF3B6B;
+  --citron: #E9FF32;
+  --rule: #DCD9CE;
+  --reader-font-size: 18px;
+  --reader-line-height: 1.72;
+}
+
+@theme inline {
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-mono: "Martian Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+}
+
+::selection {
+  background-color: var(--citron);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cobalt);
+  outline-offset: 2px;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.essay-prose p {
+  font-size: var(--reader-font-size);
+  line-height: var(--reader-line-height);
+}
